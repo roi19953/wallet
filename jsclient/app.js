@@ -18,7 +18,7 @@
 var express = require('express');
 var path = require('path');
 var bodyParser = require('body-parser');
-var exphbs = require('express-handlebars');
+var exphbs = require('express-handlebars');//comment
 
 var app = express();
 
