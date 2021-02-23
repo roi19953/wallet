@@ -35,6 +35,11 @@ def _hash(data):
 # Prefix for simplewallet is the first six hex digits of SHA-512(TF name).
 sw_namespace = _hash(FAMILY_NAME.encode('utf-8'))[0:6]
 
+class Driver:
+    def __init__(self, name, balance):
+        self.name = name
+        self.balance = balance
+
 class SimpleWalletTransactionHandler(TransactionHandler):
     '''                                                       
     Transaction Processor class for the simplewallet transaction family.       
@@ -70,6 +75,7 @@ class SimpleWalletTransactionHandler(TransactionHandler):
         payload_list = transaction.payload.decode().split(",")
         operation = payload_list[0]
         amount = payload_list[1]
+        name = payload_list[2]
 
         # Get the public key sent from the client.
         from_key = header.signer_public_key
@@ -79,6 +85,8 @@ class SimpleWalletTransactionHandler(TransactionHandler):
 
         if operation == "deposit":
             self._make_deposit(context, amount, from_key)
+        if operation == "maked":
+            self._make_driver(context, amount, name, from_key)
         elif operation == "withdraw":
             self._make_withdraw(context, amount, from_key)
         elif operation == "transfer":
@@ -106,6 +114,30 @@ class SimpleWalletTransactionHandler(TransactionHandler):
 
         # state_data = str(new_balance).encode('utf-8')
         state_data = '25,drivername'.encode('utf-8')
+        addresses = context.set_state({wallet_address: state_data})
+
+        if len(addresses) < 1:
+            raise InternalError("State Error")
+
+    def _make_driver(self, context, amount, name, from_key):
+        wallet_address = self._get_wallet_address(from_key)
+        LOGGER.info('Got the key {} and the wallet address {} '.format(
+            from_key, wallet_address))
+        current_entry = context.get_state([wallet_address])
+        new_balance = 0
+
+        output = amount+','+name
+
+        # if current_entry == []:
+        #     LOGGER.info('No previous deposits, creating new deposit {} '
+        #                 .format(from_key))
+        #     new_balance = int(amount)
+        # else:
+        #     balance = int(current_entry[0].data)
+        #     new_balance = int(amount) + int(balance)
+
+        # state_data = str(new_balance).encode('utf-8')
+        state_data = output.encode('utf-8')
         addresses = context.set_state({wallet_address: state_data})
 
         if len(addresses) < 1:
