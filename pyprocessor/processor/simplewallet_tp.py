@@ -82,12 +82,12 @@ class SimpleWalletTransactionHandler(TransactionHandler):
         # Perform the operation.
         LOGGER.info("Operation = " + operation)
         print(operation)
-        if operation == "deposit":
+        if operation == "deposit1":
             self._make_deposit(context, amount, from_key)
-        elif operation == "makeDriver":
-            if len(payload_list) == 3:
-                name = payload_list[2]
-            self._make_driver(context, amount, name, from_key)
+        # elif operation == "makeDriver":
+        #     if len(payload_list) == 3:
+        #         name = payload_list[2]
+        #     self._make_driver(context, amount, name, from_key)
         elif operation == "withdraw":
             self._make_withdraw(context, amount, from_key)
         elif operation == "transfer":
