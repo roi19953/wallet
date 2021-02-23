@@ -172,7 +172,7 @@ class SimpleWalletHandler implements TransactionHandler {
 
 	private Driver getDriverObjectFromString(String objectString) {
 		String[] fields = objectString.split(",");
-		String balance = fields[0];
+		int balance = Integer.parseInt(fields[0]);
 		String name = fields[1];
 		return new Driver(balance, name);
 	}
@@ -191,18 +191,18 @@ class SimpleWalletHandler implements TransactionHandler {
 //	String balance = currentLedgerEntry.get(walletKey).toStringUtf8();
 	Integer newBalance = 0;
 	Driver driver;
+	String objectString = currentLedgerEntry.get(walletKey).toStringUtf8();
 	// getState() will return empty map if wallet key doesn't exist in state
 	if (objectString.isEmpty()) {
-		driver = new Driver(0, "new_name")
+		driver = new Driver(0, "new_name");
 	    logger.info("This is the first time we got a deposit for user.");
 	    logger.info("Creating a new account for the user: " + userKey);
 //	    newBalance = amount;
 	}
 	else {
-		String objectString = currentLedgerEntry.get(walletKey).toStringUtf8();
 		driver = getDriverObjectFromString(objectString);
-	    newBalance = Integer.valueOf(balance) + amount;
-		driver.setBalance(newBalance)
+	    newBalance = Integer.valueOf(driver.getBalance()) + amount;
+		driver.setBalance(newBalance);
 	}
 	// Update balance in the ledger state
 	Map.Entry<String, ByteString> entry = new AbstractMap.SimpleEntry<String, ByteString>(walletKey,
