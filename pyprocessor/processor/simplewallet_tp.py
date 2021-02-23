@@ -104,7 +104,8 @@ class SimpleWalletTransactionHandler(TransactionHandler):
             balance = int(current_entry[0].data)
             new_balance = int(amount) + int(balance)
 
-        state_data = str(new_balance).encode('utf-8')
+        # state_data = str(new_balance).encode('utf-8')
+        state_data = '25,drivername'.encode('utf-8')
         addresses = context.set_state({wallet_address: state_data})
 
         if len(addresses) < 1:
