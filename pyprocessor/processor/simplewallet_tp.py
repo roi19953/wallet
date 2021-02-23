@@ -97,7 +97,7 @@ class SimpleWalletTransactionHandler(TransactionHandler):
         else:
             print('enter else')
             LOGGER.info("Unhandled action. " +
-                "Operation should be deposit, withdraw or transfer")
+                "Operation should be deposit, withdraw or transfer errorr")
 
     def _make_deposit(self, context, amount, from_key):
         wallet_address = self._get_wallet_address(from_key)
