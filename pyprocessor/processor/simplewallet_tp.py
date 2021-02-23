@@ -75,17 +75,18 @@ class SimpleWalletTransactionHandler(TransactionHandler):
         payload_list = transaction.payload.decode().split(",")
         operation = payload_list[0]
         amount = payload_list[1]
-        name = payload_list[2]
 
         # Get the public key sent from the client.
         from_key = header.signer_public_key
 
         # Perform the operation.
-        LOGGER.info("Operation = "+ operation)
-
+        LOGGER.info("Operation = " + operation)
+        print(operation)
         if operation == "deposit":
             self._make_deposit(context, amount, from_key)
         elif operation == "maked":
+            if len(payload_list) == 3:
+                name = payload_list[2]
             self._make_driver(context, amount, name, from_key)
         elif operation == "withdraw":
             self._make_withdraw(context, amount, from_key)
@@ -94,6 +95,7 @@ class SimpleWalletTransactionHandler(TransactionHandler):
                 to_key = payload_list[2]
             self._make_transfer(context, amount, to_key, from_key)
         else:
+            print('enter else')
             LOGGER.info("Unhandled action. " +
                 "Operation should be deposit, withdraw or transfer")
 
