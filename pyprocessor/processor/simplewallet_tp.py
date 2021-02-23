@@ -85,7 +85,7 @@ class SimpleWalletTransactionHandler(TransactionHandler):
 
         if operation == "deposit":
             self._make_deposit(context, amount, from_key)
-        if operation == "maked":
+        elif operation == "maked":
             self._make_driver(context, amount, name, from_key)
         elif operation == "withdraw":
             self._make_withdraw(context, amount, from_key)
