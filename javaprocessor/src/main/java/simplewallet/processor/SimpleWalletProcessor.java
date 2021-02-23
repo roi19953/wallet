@@ -184,6 +184,7 @@ class SimpleWalletHandler implements TransactionHandler {
     private void makeDeposit(State stateInfo, String operation, Integer amount, String userKey)
 	    throws InvalidTransactionException, InternalError {
 	// Get the wallet key derived from the wallet user's public key
+        System.out.println("enter java deposit");
 	String walletKey = getWalletKey(userKey);
 	logger.info("Got user key " + userKey + "wallet key " + walletKey);
 	// Get balance from ledger state

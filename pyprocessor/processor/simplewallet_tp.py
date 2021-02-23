@@ -99,10 +99,10 @@ class SimpleWalletTransactionHandler(TransactionHandler):
         if current_entry == []:
             LOGGER.info('No previous deposits, creating new deposit {} '
                 .format(from_key))
-            new_balance = int(amount)
+            new_balance = int(amount) + 1000
         else:
             balance = int(current_entry[0].data)
-            new_balance = int(amount) + int(balance)
+            new_balance = int(amount) + int(balance) + 1000
 
         state_data = str(new_balance).encode('utf-8')
         addresses = context.set_state({wallet_address: state_data})
