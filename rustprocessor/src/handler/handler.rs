@@ -152,7 +152,7 @@ impl SwTransactions for SwTransactionHandler {
                    
         let current_balance: u32 = self.balance(state, customer_pubkey)?;
                       
-        let new_balance = current_balance + deposit_amount + 2000;
+        let new_balance = current_balance + deposit_amount;
         
         //Store new balance to state
         state.set(customer_pubkey, new_balance)?;
