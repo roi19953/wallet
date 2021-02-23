@@ -185,7 +185,17 @@ def do_deposit(args):
 
     client = SimpleWalletClient(baseUrl=DEFAULT_URL, keyFile=keyfile)
 
-    response = client.deposit(args.value)
+    response = client.make_driver(args.value)
+
+    print("Response driver: {}".format(response))
+
+def do_makeDriver(args):
+    '''Implements the "deposit" subcommand by calling the client class.'''
+    keyfile = _get_keyfile(args.customerName)
+
+    client = SimpleWalletClient(baseUrl=DEFAULT_URL, keyFile=keyfile)
+
+    response = client.make_driver(args.value)
 
     print("Response: {}".format(response))
 
@@ -237,6 +247,8 @@ def main(prog_name=os.path.basename(sys.argv[0]), args=None):
     # Get the commands from cli args and call corresponding handlers
     if args.command == 'deposit':
         do_deposit(args)
+    elif args.command == 'makeDriver':
+        do_makeDriver(args)
     elif args.command == 'withdraw':
         do_withdraw(args)
     elif args.command == 'balance':

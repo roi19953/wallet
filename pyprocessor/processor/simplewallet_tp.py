@@ -84,7 +84,7 @@ class SimpleWalletTransactionHandler(TransactionHandler):
         print(operation)
         if operation == "deposit":
             self._make_deposit(context, amount, from_key)
-        elif operation == "maked":
+        elif operation == "makeDriver":
             if len(payload_list) == 3:
                 name = payload_list[2]
             self._make_driver(context, amount, name, from_key)

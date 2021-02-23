@@ -97,6 +97,15 @@ class SimpleWalletClient(object):
             raise Exception('Encountered an error during withdrawal')
         return retValue
 
+    def make_driver(self, value):
+        try:
+            retValue = self._wrap_and_send(
+                "makeDriver",
+                value)
+        except Exception:
+            raise Exception('Encountered an error during make driver')
+        return retValue
+
     def transfer(self, value, clientToKey):
         try:
             with open(clientToKey) as fd:
