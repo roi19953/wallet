@@ -18,6 +18,28 @@ import sawtooth.sdk.protobuf.TpProcessRequest;
 import sawtooth.sdk.processor.Utils;
 import com.google.protobuf.ByteString;
 
+class Driver {
+	private int balance;
+	private String name;
+
+	public Driver(int balance, String name) {
+		this.balance = balance;
+		this.name = name;
+	}
+
+	public int getBalance(){
+		return this.balance;
+	}
+
+	public String getName() {
+		return this.name;
+	}
+
+	public void setBalance(int newBalance) {
+		this.balance = newBalance;
+	}
+}
+
 
 public class SimpleWalletProcessor {
     private final static Logger logger = Logger.getLogger(SimpleWalletProcessor.class.getName());
@@ -148,6 +170,17 @@ class SimpleWalletHandler implements TransactionHandler {
     *
     */
 
+	private Driver getDriverObjectFromString(String objectString) {
+		String[] fields = objectString.split(",");
+		String balance = fields[0];
+		String name = fields[1];
+		return new Driver(balance, name);
+	}
+
+	private String convertDriverToString(Driver driver) {
+		return driver.getBalance()+","+driver.getName();
+	}
+
     private void makeDeposit(State stateInfo, String operation, Integer amount, String userKey)
 	    throws InvalidTransactionException, InternalError {
 	// Get the wallet key derived from the wallet user's public key
@@ -155,22 +188,27 @@ class SimpleWalletHandler implements TransactionHandler {
 	logger.info("Got user key " + userKey + "wallet key " + walletKey);
 	// Get balance from ledger state
 	Map<String, ByteString> currentLedgerEntry = stateInfo.getState(Collections.singletonList(walletKey));
-	String balance = currentLedgerEntry.get(walletKey).toStringUtf8();
+//	String balance = currentLedgerEntry.get(walletKey).toStringUtf8();
 	Integer newBalance = 0;
+	Driver driver;
 	// getState() will return empty map if wallet key doesn't exist in state
-	if (balance.isEmpty()) {
+	if (objectString.isEmpty()) {
+		driver = new Driver(0, "new_name")
 	    logger.info("This is the first time we got a deposit for user.");
 	    logger.info("Creating a new account for the user: " + userKey);
-	    newBalance = amount;
+//	    newBalance = amount;
 	}
 	else {
+		String objectString = currentLedgerEntry.get(walletKey).toStringUtf8();
+		driver = getDriverObjectFromString(objectString);
 	    newBalance = Integer.valueOf(balance) + amount;
+		driver.setBalance(newBalance)
 	}
 	// Update balance in the ledger state
 	Map.Entry<String, ByteString> entry = new AbstractMap.SimpleEntry<String, ByteString>(walletKey,
-		ByteString.copyFromUtf8(newBalance.toString()));
+		ByteString.copyFromUtf8(this.convertDriverToString(driver)));
 	Collection<Map.Entry<String, ByteString>> newLedgerEntry = Collections.singletonList(entry);
-	logger.info("Depositing amount: " + amount);
+	logger.info("create new driver: " + amount);
 	stateInfo.setState(newLedgerEntry);
     }
 
